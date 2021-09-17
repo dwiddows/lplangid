@@ -1,0 +1,4 @@
+# MANIFEST.in file - this forces some old builds (including internal TeamCity) builds to include data files.
+# MANIFEST.in is supposed to be deprecated sometime in the mid-2010s, but several of the newer alternatives
+# using setuptools did not work in all environments, and this older alternative worked.
+include lplangid/freq_data/*.csv
