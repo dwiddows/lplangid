@@ -5,7 +5,7 @@ setup(
     name='lplangid',  # Required.
     version='0.1.0',  # Required. Use major.minor.dev format.
     description='LivePerson language detection package using a Reciprocal Rank Classifier',  # Required
-    packages=find_packages(),
+    packages=['lplangid', 'training'],
     include_package_data=True,
     data_files=[('lplangid/freq_data', glob.glob('lplangid/freq_data/*.csv'))],
     install_requires=['flake', 'pytest'],  # List new package requirements here, but please be sure you need them!
