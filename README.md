@@ -11,7 +11,6 @@ Basic usage example for language classification:
 ```
 >>> from lplangid.language_classifier import RRCLanguageClassifier
 >>> my_classifier = RRCLanguageClassifier.get_default()
->>> my_classifier = RRCLanguageClassifier.default_instance()
 >>> my_classifier.get_winner("C'est use teste")
 
 'fr'
