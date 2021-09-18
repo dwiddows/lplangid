@@ -1,6 +1,6 @@
 # lplangid: Reciprocal Rank Classifier for Language Identification
 
-This package is a python implementation of the classifier described in the paper "Language Identification with a Reciprocal Rank Classifier" (TODO: Publish and link to preprint before promoting.) For more detailed documentation, see the [project wiki](./wiki).
+This package is a python implementation of the classifier described in the paper "Language Identification with a Reciprocal Rank Classifier" (TODO: Publish and link to preprint before promoting.) For more detailed documentation, see the [project wiki](https://github.com/LivePersonInc/lplangid/wiki).
 
 ## Installation and Usage in Classification
 
