@@ -4,7 +4,8 @@ This package is a python implementation of the classifier described in the paper
 
 ## Installation and Usage in Classification
 
-You can install the package by running `$ pip install lplangid`, or by cloning this repository and running `pip install -e .` in this directory. 
+You can install the package by running `$ pip install lplangid` which installs the package from the distribution at [https://pypi.org/project/lplangid/](https://pypi.org/project/lplangid/), 
+or by cloning this repository and running `pip install -e .` in this directory. 
 
 Basic usage example for language classification:
 
