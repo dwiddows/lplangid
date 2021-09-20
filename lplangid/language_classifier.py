@@ -58,6 +58,10 @@ class RRCLanguageClassifier:
         """Returns the language with the single best score. (Ties are very rare.)"""
         return get_winner(self.term_ranks, self.char_weights, text)
 
+    def get_winner_score(self, text: str) -> Tuple[str, float]:
+        """Returns the language with the single best score, and its score. (Ties are very rare.)"""
+        return get_winner_score(self.term_ranks, self.char_weights, text)
+
     def get_language_scores(self, text: str) -> List[Tuple[str, float]]:
         """Returns a list of (language code, score) pairs, sorted from highest to lowest score."""
         return score_text(self.term_ranks, self.char_weights, text)

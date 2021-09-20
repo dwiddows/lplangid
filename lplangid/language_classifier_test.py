@@ -59,6 +59,13 @@ def test_language_classifier_cases2():
         assert winner == text[1], f"Expected {text[1]} instead of {winner} for \"{text[0]}\""
 
 
+def test_classifier_instance():
+    classifier = lc.RRCLanguageClassifier.default_instance()
+    assert classifier.get_winner("This is English") == "en"
+    assert classifier.get_winner_score("This is English")[0] == "en"
+    assert classifier.get_language_scores("This is English")[0][0] == "en"
+
+
 def test_get_winner_score_for_digit():
     ws = lc.get_winner_score(ALL_TERM_RANKS, ALL_CHAR_WEIGHTS, '1')
     assert ws == (None, 0.0)
