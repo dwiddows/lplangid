@@ -17,6 +17,8 @@ Basic usage example for language classification:
 'fr'
 ``` 
 
+A single `correct' language is not always the most appropriate output. For more informative options, see [RecommendedUsagePatterns](https://github.com/LivePersonInc/lplangid/wiki/RecommendedUsagePatterns).
+
 ## Data Preparation and Distribution
 
 Throughout this package, languages are identified and referred to using 
