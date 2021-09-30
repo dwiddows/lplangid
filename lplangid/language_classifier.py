@@ -2,6 +2,7 @@ import logging
 import math
 import os
 import string
+from collections import Counter
 from typing import Dict, List, Optional, Tuple
 
 from lplangid import count_utils as cu
@@ -15,6 +16,7 @@ FREQ_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "freq_d
 TERM_PRESENCE_WEIGHT = 0.05
 BASELINE_TERM_SCORE = TERM_PRESENCE_WEIGHT / 2
 TOP_RANK_DAMPING = 10
+LETTERS = set(string.ascii_lowercase)
 
 # If the character score for a language is below this proportion of the winning char score, it's rejected.
 # This is tuned towards rejecting Chinese as an option if there are too many Japanese-only characters.
@@ -99,7 +101,8 @@ def invert_char_tables(lang_to_char_weight: Dict[str, Dict[str, float]]) -> Dict
 
 def score_terms(all_term_ranks: Dict[str, Dict[str, int]], text: str, languages: Tuple[str] = ()) -> Dict[str, float]:
     """Gets a score for each language for the given text based on how common the terms are."""
-    tokens = [token for token in tokenize_fast(text) if len(token) > 1 or token not in string.ascii_lowercase]
+    tokens = Counter(tokenize_fast(text))
+    tokens = {token: count for token, count in tokens.items() if len(token) > 1 or token not in LETTERS}
     scores: Dict[str, float] = {}
     if not languages:
         languages = all_term_ranks.items()
@@ -108,22 +111,23 @@ def score_terms(all_term_ranks: Dict[str, Dict[str, int]], text: str, languages:
         lang_score = BASELINE_TERM_SCORE
         if lang in all_term_ranks:
             ranks = all_term_ranks[lang]
-            for token in tokens:
+            for token, count in tokens.items():
                 if token in ranks:
-                    lang_score += TERM_PRESENCE_WEIGHT + 1 / math.sqrt(TOP_RANK_DAMPING + ranks[token])
+                    lang_score += (TERM_PRESENCE_WEIGHT + 1 / math.sqrt(TOP_RANK_DAMPING + ranks[token])) * count
         scores[lang] = lang_score
     return scores
 
 
 def score_chars(all_char_weights: Dict[str, List[Tuple[str, float]]], text: str) -> Dict[str, float]:
     """Gets a score for each language for the given text based on how common the characters are."""
-    chars = [char for char in text if char.isalpha() and char in all_char_weights]
+    chars = Counter(text)
+    chars = {char: count for char, count in chars.items() if char.isalpha() and char in all_char_weights}
     scores = {}
-    for char in chars:
+    for char, count in chars.items():
         for lang, weight in all_char_weights[char]:
             if lang not in scores:
                 scores[lang] = 0
-            scores[lang] += weight
+            scores[lang] += weight * count
     return scores
 
 
