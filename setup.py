@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='lplangid',  # Required.
-    version='0.1.2',  # Required. Use major.minor.dev format.
+    version='0.1.3',  # Required. Use major.minor.dev format.
     description='LivePerson language detection package using a Reciprocal Rank Classifier',  # Required
     long_description='This package is a python implementation of the classifier described in the paper '
                      'Language Identification with a Reciprocal Rank Classifier".',
