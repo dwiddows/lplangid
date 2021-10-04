@@ -18,6 +18,6 @@ setup(
 
     url='https://github.com/LivePersonInc/lplangid',  # Optional
     author='Dominic Widdows, Chris Brew',  # Optional
-    author_email='dwiddows@gmail.com,christopher.brew@gmail.com',  # Optional
+    author_email='dwiddows@gmail.com,cbrew@acm.org',  # Optional
     keywords='language detection, language classification, reciprocal rank classifier, lplangid'
 )

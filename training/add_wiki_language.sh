@@ -40,9 +40,14 @@ fi
 # If this assumption becomes incorrect, you'll need to navigate to the most recent version explicitly.
 year_month=$(date +%Y%m)
 day=$(date +%d)
-last_dump_day=$(( day <= 20 ? 1 : 20 ))
+last_dump_day=$(printf "%02d" $(( day <= 20 ? 01 : 20 )))
 dump_ymd=$year_month$last_dump_day
 last_dump_url=https://dumps.wikimedia.org/${language}wiki/${dump_ymd}/${language}wiki-${dump_ymd}-pages-articles-multistream.xml.bz2
+
+if ! wget -q --method=HEAD $last_dump_url; then
+  echo "Found no archive at $last_dump_url. Exiting."
+  exit 1
+fi
 
 mkdir -p $target_wiki_dir
 pushd $target_wiki_dir
