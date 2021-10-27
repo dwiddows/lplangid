@@ -42,7 +42,8 @@ TEST_TEXTS = [("This is English", "en"),
               ('https://downloads.anywhere.com is enough to block classification', None),
               ('I have questions about all..', 'en'),
               ('Tôi đã đăng ký được 25 ngày. Sao đến giờ vẫn chưa có phản hồi', 'vi'),
-              ('por favor desactiva mi tarjeta', 'es')
+              ('por favor desactiva mi tarjeta', 'es'),
+              ("Let's go!", 'en')
               ]
 
 
