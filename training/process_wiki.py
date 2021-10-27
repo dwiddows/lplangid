@@ -41,7 +41,8 @@ def train_test_split(requested_languages=()):
     if requested_languages:
         missing_languages = [ml for ml in requested_languages if ml not in lang_dirs]
         if missing_languages:
-            raise ValueError(f"Language '{missing_languages}' was requested but there is no such directory in {WIKI_TEXT_ROOT}")
+            raise ValueError(
+                f"Language '{missing_languages}' was requested but there is no such directory in {WIKI_TEXT_ROOT}")
         lang_dirs = requested_languages
     logging.info(f"Making test train split for languages: {', '.join(lang_dirs)}")
 
