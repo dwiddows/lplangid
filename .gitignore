@@ -1,0 +1,12 @@
+*pyc
+*pycache*
+
+.idea
+
+build/
+dist/
+lplangid.egg-info/
+venv/
+
+# For emacs
+*~
