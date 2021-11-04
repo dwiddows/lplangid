@@ -79,13 +79,16 @@ def freq_table_to_ranks(input_dict: Dict[str, int]):
     return {item[0]: rank + 1 for rank, item in enumerate(sorted(input_dict.items(), key=lambda x: x[1], reverse=True))}
 
 
-def normalize_score_dict(input_dict: Dict[str, float]) -> Dict[str, float]:
+def normalize_score_dict(input_dict: Dict[str, float], exponent=1) -> Dict[str, float]:
     """Takes a dictionary of scores and applies L1-normalization (dividing each value by the sum).
 
     This is the simplest way of turning a collection of scores into a probability distribution.
+
+    The exponent can be used to make the normalization use L2 or some other norm.
     """
-    total_weight = sum(input_dict.values())
-    output_dict = {key: value / total_weight if total_weight > 0 else 1 / len(input_dict)
+    total_weight = sum([pow(val, exponent) for val in input_dict.values()])
+    norm = pow(total_weight, 1/exponent)
+    output_dict = {key: value / norm if total_weight > 0 else 1 / len(input_dict)
                    for key, value in input_dict.items()}
     return output_dict
 
