@@ -51,7 +51,7 @@ fi
 
 mkdir -p $target_wiki_dir
 pushd $target_wiki_dir
-  echo "Fetching wiki data file from $last_dump_url ..."
+  echo "Fetching wiki data file from $last_dump_url to directory `pwd`"
   time wget $last_dump_url
   echo "Unzipping wiki archive using bunzip2 ..."
   time bunzip2 ${language}wiki-${dump_ymd}-pages-articles-multistream.xml.bz2
