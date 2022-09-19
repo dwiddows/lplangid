@@ -69,16 +69,18 @@ class RRCLanguageClassifier:
         return score_text(self.term_ranks, self.char_weights, text)
 
 
-def prepare_scoring_tables() -> Tuple[Dict[str, Dict[str, int]], Dict[str, List[Tuple[str, float]]]]:
+def prepare_scoring_tables(data_dir=FREQ_DATA_DIR) -> Tuple[Dict[str, Dict[str, int]],
+                                                            Dict[str, List[Tuple[str, float]]]]:
     """Reads in term and character ranking data from the files in FREQ_DATA_DIR"""
     all_term_ranks = {}
     all_char_freqs = {}
-    for lang_code in set([x[:2] for x in os.listdir(FREQ_DATA_DIR) if x.endswith('.csv') and not x.startswith('.')]):
-        tf_file = os.path.join(FREQ_DATA_DIR, f"{lang_code}_term_rank.csv")
+    for lang_code in set([x.split('_')[0] for x in os.listdir(data_dir)
+                          if x.endswith('.csv') and not x.startswith('.')]):
+        tf_file = os.path.join(data_dir, f"{lang_code}_term_rank.csv")
         with open(tf_file) as term_freq_file:
             term_freqs = cu.read_rank_file(term_freq_file, MAX_WORDS_PER_LANG)
             all_term_ranks[lang_code] = term_freqs
-        with open(os.path.join(FREQ_DATA_DIR, f'{lang_code}_char_freq.csv')) as char_freq_file:
+        with open(os.path.join(data_dir, f'{lang_code}_char_freq.csv')) as char_freq_file:
             all_char_freqs[lang_code] = cu.normalize_score_dict(cu.read_freq_file(char_freq_file))
     all_char_weights = invert_char_tables(all_char_freqs)
 
