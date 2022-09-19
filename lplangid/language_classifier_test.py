@@ -3,6 +3,7 @@ from lplangid import language_classifier as lc, count_utils as cu
 # This is the very simplest way to share data structures between tests.
 # I dare say it can become unsafe if you do bad things. So please don't.
 # Or move to some kind of fixture structure. One that works with PyCharm and isn't too fiddly.
+lc.FREQ_DATA_DIR += '_bible'
 ALL_TERM_RANKS, ALL_CHAR_WEIGHTS = lc.prepare_scoring_tables()
 
 TEST_TEXTS = [("This is English", "en"),
