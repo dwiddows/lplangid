@@ -1,0 +1,6 @@
+fasttext
+numpy
+pandas
+pytest
+scipy
+setuptools

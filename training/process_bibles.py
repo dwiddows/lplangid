@@ -99,37 +99,6 @@ def text_files_to_freq_files(input_dir, output_dir=lc.FREQ_DATA_DIR + '_bible'):
                      f"{len(char_freq_dict)} character frequencies for language '{lang}' into directory {output_dir}.")
 
 
-def run_bible_tests(test_dir, num_trials_per_lang=1000):
-    all_term_ranks, all_char_weights = lc.prepare_scoring_tables(lc.FREQ_DATA_DIR + '_bible')
-    classifier = lc.RRCLanguageClassifier(all_term_ranks, all_char_weights)
-    filenames = os.listdir(test_dir)
-
-    total_tests, total_attempted, total_correct = 0, 0, 0
-    for filename in filenames:
-        attempted, correct = 0, 0
-        lang = filename.split('.')[0]
-
-        available_test_lines = open(os.path.join(test_dir, filename)).readlines()
-        if len(available_test_lines) < num_trials_per_lang:
-            logging.warning(f"Only {len(available_test_lines)} test lines for language {lang} from file {filename}.")
-        test_lines = np.random.choice(available_test_lines, num_trials_per_lang)
-
-        for test_line in test_lines:
-            results = classifier.get_language_scores(test_line)[:5]
-            if len(results) > 0:
-                attempted += 1
-                if results[0][0] == lang:
-                    correct += 1
-        print(f'Language: {lang} Trials: {len(test_lines)}. Attempted: {attempted}. Correct: {correct}. '
-              f'Precision: {correct / attempted:0.3f}. Recall: {correct / len(test_lines)}')
-        total_tests += len(test_lines)
-        total_attempted += attempted
-        total_correct += correct
-
-    print(f'All languages. Trials: {num_trials_per_lang}. Attempted: {total_attempted}. Correct: {total_correct}. '
-          f'Precision: {total_correct / total_attempted:0.3f}. Recall: {total_correct / total_tests}')
-
-
 def run_wikipedia_tests(num_trials=10000, restrict_to_wiki_langs=False):
     all_term_ranks, all_char_weights = lc.prepare_scoring_tables(lc.FREQ_DATA_DIR + '_bible')
     wiki_langs = os.listdir(WIKI_TEXT_ROOT)
@@ -176,8 +145,6 @@ def main():
         logging.basicConfig(level=logging.INFO)
         process_bibles_xml_to_text()
         text_files_to_freq_files(os.path.join(BIBLE_TXT_ROOT, SUBDIRS[1]))
-
-    run_bible_tests(os.path.join(BIBLE_TXT_ROOT, SUBDIRS[2]))
 
     # print("Restricting to Wiki languages:")
     # run_wikipedia_tests(restrict_to_wiki_langs=True)
