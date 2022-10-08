@@ -134,4 +134,4 @@ def test_rare_bible_languages():
     all_term_ranks, all_char_weights = lc.prepare_scoring_tables(lc.FREQ_DATA_DIR + '_bible')
     classifier = lc.RRCLanguageClassifier(all_term_ranks, all_char_weights)
     text = "'ⲞⲨⲞϨ ⲘⲠⲈϤⲤⲞⲨⲰⲚⲤ ϢⲀⲦⲈⲤⲘⲒⲤⲒ ⲘⲠⲒϢⲎ ⲢⲒ ⲞⲨⲞϨ ⲀϤⲘⲞⲨϮ ⲈⲠⲈϤⲢⲀⲚ ϪⲈ ⲒⲎⲤⲞⲨⲤ."
-    assert(classifier.get_winner(text)) == 'co'
+    assert classifier.get_winner(text) == 'co'
