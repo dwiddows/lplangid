@@ -48,12 +48,6 @@ TEST_TEXTS = [("This is English", "en"),
 
 
 def test_language_classifier_cases():
-    for text in TEST_TEXTS:
-        winner = lc.get_winner(ALL_TERM_RANKS, ALL_CHAR_WEIGHTS, text[0])
-        assert winner == text[1], f"Expected {text[1]} instead of {winner} for \"{text[0]}\""
-
-
-def test_language_classifier_cases2():
     classifier = lc.RRCLanguageClassifier.default_instance()
     for text in TEST_TEXTS:
         winner = classifier.get_winner(text[0])
@@ -118,8 +112,10 @@ def _test_large_precision():
     print(f"Precision: {precision}, Recall: {recall}, F-measure: {f_measure}")
 
 
-def test_sr_hr():
-    """Shows that text from a Serbian radio station gets classified as Croatian,
+def _test_sr_hr():
+    """Disabled by removing sr and hr freq files, because this is so unreliable.
+
+    Shows that text from a Serbian radio station gets classified as Croatian,
     because of the vernacular latin orthography."""
     test_sr = """FEMISAN A
     NAJBOLJE JUTRO
