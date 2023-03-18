@@ -18,10 +18,10 @@ def nullsafe_classification_report(y_label: List[str], y_pred: List[str]):
     y_pred = [y if y in label_set else dummy_val for y in y_pred]
     report = classification_report(y_label, y_pred, output_dict=True)
     if dummy_val in report:
-        del(report[dummy_val])
-        report['macro avg']['precision'] = report['macro avg']['precision'] * (num_pred_labels + 1) / num_pred_labels
-        report['macro avg']['recall'] = report['macro avg']['recall'] * (num_pred_labels + 1) / num_pred_labels
-        report['macro avg']['f1-score'] = report['macro avg']['f1-score'] * (num_pred_labels + 1) / num_pred_labels
+        del report[dummy_val]
+        report["macro avg"]["precision"] = report["macro avg"]["precision"] * (num_pred_labels + 1) / num_pred_labels
+        report["macro avg"]["recall"] = report["macro avg"]["recall"] * (num_pred_labels + 1) / num_pred_labels
+        report["macro avg"]["f1-score"] = report["macro avg"]["f1-score"] * (num_pred_labels + 1) / num_pred_labels
     df = pd.DataFrame(report).transpose()
     return df
 
@@ -32,4 +32,3 @@ def test_nullsafe_classification_report():
     df = nullsafe_classification_report(y_label, y_pred)
     print()
     print(df.to_latex())
-

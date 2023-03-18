@@ -7,11 +7,11 @@ from experiments import fasttext_client
 from experiments.classification_report import nullsafe_classification_report
 
 # The directory with the unzipped files from https://github.com/christos-c/bible-corpus
-BIBLE_XML_DIR = '/Users/widdows/Code/bible-corpus/bibles'
+BIBLE_XML_DIR = "/Users/widdows/Code/bible-corpus/bibles"
 
 # The directory where these will be extracted to raw text files, in full, train, and test directories.
-BIBLE_TXT_ROOT = '/Users/widdows/Data/BibleTexts'
-SUBDIRS = ['full', 'train', 'test']
+BIBLE_TXT_ROOT = "/Users/widdows/Data/BibleTexts"
+SUBDIRS = ["full", "train", "test"]
 
 
 def run_bible_tests(test_dir, num_trials_per_lang=1000):
@@ -25,7 +25,7 @@ def run_bible_tests(test_dir, num_trials_per_lang=1000):
     y_labels, y_pred = [], []
     for filename in filenames:
         attempted, correct = 0, 0
-        lang = filename.split('.')[0]
+        lang = filename.split(".")[0]
 
         if lang not in top_languages:
             continue
@@ -48,14 +48,18 @@ def run_bible_tests(test_dir, num_trials_per_lang=1000):
         if correct == 0:
             print(f"Skipping missing language {lang}")
             continue
-        print(f'Language: {lang} Trials: {len(test_lines)}. Attempted: {attempted}. Correct: {correct}. '
-              f'Precision: {correct / attempted:0.3f}. Recall: {correct / len(test_lines)}')
+        print(
+            f"Language: {lang} Trials: {len(test_lines)}. Attempted: {attempted}. Correct: {correct}. "
+            f"Precision: {correct / attempted:0.3f}. Recall: {correct / len(test_lines)}"
+        )
         total_tests += len(test_lines)
         total_attempted += attempted
         total_correct += correct
 
-    print(f'All languages. Trials: {num_trials_per_lang}. Attempted: {total_attempted}. Correct: {total_correct}. '
-          f'Precision: {total_correct / total_attempted:0.3f}. Recall: {total_correct / total_tests}')
+    print(
+        f"All languages. Trials: {num_trials_per_lang}. Attempted: {total_attempted}. Correct: {total_correct}. "
+        f"Precision: {total_correct / total_attempted:0.3f}. Recall: {total_correct / total_tests}"
+    )
 
     print(nullsafe_classification_report(y_labels, y_pred))
 
@@ -64,5 +68,5 @@ def main():
     run_bible_tests(os.path.join(BIBLE_TXT_ROOT, SUBDIRS[2]))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
