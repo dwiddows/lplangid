@@ -56,6 +56,14 @@ class RRCLanguageClassifier:
                      f"{', '.join(sorted(all_term_ranks.keys()))}")
         return RRCLanguageClassifier(all_term_ranks, all_char_weights)
 
+    @staticmethod
+    def many_language_bible_instance():
+        """Gets a default instance populated using the prepare_scoring_tables function."""
+        all_term_ranks, all_char_weights = prepare_scoring_tables(data_dir=FREQ_DATA_DIR + "_bible")
+        logging.info(f"Loaded classifier with term ranks and character frequencies for these languages: "
+                     f"{', '.join(sorted(all_term_ranks.keys()))}")
+        return RRCLanguageClassifier(all_term_ranks, all_char_weights)
+
     def get_winner(self, text: str) -> str:
         """Returns the language with the single best score. (Ties are very rare.)"""
         return get_winner(self.term_ranks, self.char_weights, text)

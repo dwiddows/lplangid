@@ -6,8 +6,8 @@
 
 """These words should go at the top of the ranking table for their language."""
 TOP_DATA_OVERRIDES = {
-    "en": ["bye", "hello", "hey", "hi", "I", "me", "no", "ok", "okay",
-           "please", "pls", "thank", "thanks", "tks", "ty", "yes", "you"],
+    "en": ["bye", "hello", "hey", "hi", "i", "me", "no", "ok", "okay",
+           "please", "pls", "thank", "thanks", "tks", "ty", "yes", "you", "i'm", "you're"],
     "es": ["hola", "gracias", "no"],
     "it": ["no"],
     "ja": ["本"],
