@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='lplangid',  # Required.
-    version='0.1.4',  # Required. Use major.minor.dev format.
+    version='1.0.0',    # Required. Use major.minor.dev format.
     description='Language detection package using a Reciprocal Rank Classifier',  # Required
     long_description='This package is a python implementation of the classifier described in the paper '
                      '"Language Identification with a Reciprocal Rank Classifier" (https://arxiv.org/abs/2109.09862).',
