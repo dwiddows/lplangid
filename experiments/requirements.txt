@@ -1,4 +1,5 @@
 fasttext
+langid
 numpy
 pandas
 pytest
