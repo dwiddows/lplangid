@@ -1,0 +1,38 @@
+Introduction
+------------
+
+TwitUser is a dataset of language-labeled Twitter messages meant for the
+evaluation of automatic approaches to language identification of Twitter messages.
+Its preparation and characteristics are described in [1]. If you use this data in your
+own research, please cite it as:
+
+@InProceedings{lui-baldwin:2014:LASM,
+  author    = {Lui, Marco  and  Baldwin, Timothy},
+  title     = {Accurate Language Identification of Twitter Messages},
+  booktitle = {Proceedings of the 5th Workshop on Language Analysis for Social Media (LASM)},
+  month     = {April},
+  year      = {2014},
+  address   = {Gothenburg, Sweden},
+  publisher = {Association for Computational Linguistics},
+  pages     = {17--25},
+  url       = {http://www.aclweb.org/anthology/W14-1303}
+}
+
+Contact
+-------
+
+Marco Lui <mhlui@unimelb.edu.au>
+Tim Baldwin <tb@ldwin.net>
+
+
+Marco Lui, September 2014
+
+
+References
+----------
+
+[1] Marco Lui, Timothy Baldwin (2014) Accurate Language Identification of 
+    Twitter Messages. In Proceedings of the 5th Workshop on Language Analysis in 
+    Social Media, Gothenburg, Sweden. Available at 
+    http://aclweb.org/anthology/W/W14/W14-1303.pdf.
+

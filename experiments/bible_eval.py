@@ -26,9 +26,11 @@ def run_bible_tests(test_dir, num_trials_per_lang=1000):
     ft_classifier = fasttext_client.FastTextLangID()
     filenames = os.listdir(test_dir)
 
-    fn_labels = [[rrc_classifier.get_winner, "RRC"],
-                 [ft_classifier.predict_lang, "FastText"],
-                 [langid_classify, "LangID"]]
+    fn_labels = [
+        [rrc_classifier.get_winner, "RRC"],
+        [ft_classifier.predict_lang, "FastText"],
+        [langid_classify, "LangID"],
+    ]
 
     for fn, label in fn_labels:
         print(f"Classifying with {label}")
@@ -43,7 +45,9 @@ def run_bible_tests(test_dir, num_trials_per_lang=1000):
 
             available_test_lines = open(os.path.join(test_dir, filename)).readlines()
             if len(available_test_lines) < num_trials_per_lang:
-                logging.warning(f"Only {len(available_test_lines)} test lines for language {lang} from file {filename}.")
+                logging.warning(
+                    f"Only {len(available_test_lines)} test lines for language {lang} from file {filename}."
+                )
             test_lines = np.random.choice(available_test_lines, num_trials_per_lang)
 
             for test_line in test_lines:
