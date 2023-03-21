@@ -19,6 +19,9 @@ Basic usage example for language classification:
 'fr'
 ```
 
+The default instance supports 24 common languages. To classify many more languages, use `RRCLanguageClassifier.many_language_bible_instance()`,
+which supports 103 languages.
+
 A single 'correct' language is not always the most appropriate output. For more informative options, see [RecommendedUsagePatterns](https://github.com/LivePersonInc/lplangid/wiki/Recommended-Usage-Patterns).
 
 ## Data Preparation and Distribution
