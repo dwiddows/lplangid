@@ -3,5 +3,6 @@ langid
 numpy
 pandas
 pytest
+scikit-learn
 scipy
 setuptools

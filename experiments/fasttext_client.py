@@ -1,10 +1,12 @@
+from pathlib import Path
+
 import fasttext
 
 
 class FastTextLangID:
     def __init__(self):
-        pretrained_lang_model = "/Users/widdows/Data/fasttext/lid.176.bin"
-        self.model = fasttext.load_model(pretrained_lang_model)
+        pretrained_lang_model = Path.home() / "Data" / "fasttext" / "lid.176.bin"
+        self.model = fasttext.load_model(str(pretrained_lang_model))
 
     def predict_lang(self, text):
         text = text.replace("\n", " ").strip()

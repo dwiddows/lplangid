@@ -12,7 +12,7 @@ def langid_classify(text: str):
 
 
 def run_twituser_tests():
-    rrc_classifier = lc.RRCLanguageClassifier.many_language_bible_instance()
+    rrc_classifier = lc.RRCLanguageClassifier.default_instance()
     ft_classifier = fasttext_client.FastTextLangID()
 
     fn_labels = [
@@ -27,6 +27,10 @@ def run_twituser_tests():
         with open("twituser_data/twituser") as twituser_data:
             for line in twituser_data:
                 record = json.loads(line)
+
+                if record["lang"] not in rrc_classifier.term_ranks:
+                    continue
+
                 result = fn(record["text"])
                 y_pred.append(result)
                 y_labels.append(record["lang"])
