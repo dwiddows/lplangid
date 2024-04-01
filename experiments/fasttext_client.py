@@ -1,4 +1,6 @@
 from pathlib import Path
+import warnings
+warnings.filterwarnings("ignore", message="`load_model` does not return.*")
 
 import fasttext
 

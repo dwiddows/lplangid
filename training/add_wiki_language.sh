@@ -2,6 +2,7 @@
 
 # This script goes through the steps of adding a new language to the RRC classifier based on wiki data.
 # See the README.md file for a more thorough explanation of these steps.
+# Wikipedia archives are often large (several gigabytes), so the basic download step can take several minutes.
 
 if [[ $(basename `pwd`) != "training" ]]
   then
@@ -60,6 +61,6 @@ pushd $target_wiki_dir
 popd
 
 echo "Processing text files to create character frequency and term rank data ..."
-time python process_wiki.py --languages $language
+time python process_wiki_archive.py --languages $language
 
 echo "Finished. Please check that files ${freq_data_dir}/${language}_char_freq.csv and ${freq_data_dir}/${language}_term_rank.csv look to be present and correct."

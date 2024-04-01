@@ -85,11 +85,18 @@ def prepare_scoring_tables(data_dir=FREQ_DATA_DIR) -> Tuple[Dict[str, Dict[str, 
     for lang_code in set([x.split('_')[0] for x in os.listdir(data_dir)
                           if x.endswith('.csv') and not x.startswith('.')]):
         tf_file = os.path.join(data_dir, f"{lang_code}_term_rank.csv")
-        with open(tf_file) as term_freq_file:
-            term_freqs = cu.read_rank_file(term_freq_file, MAX_WORDS_PER_LANG)
-            all_term_ranks[lang_code] = term_freqs
-        with open(os.path.join(data_dir, f'{lang_code}_char_freq.csv')) as char_freq_file:
-            all_char_freqs[lang_code] = cu.normalize_score_dict(cu.read_freq_file(char_freq_file))
+        if not os.path.isfile(tf_file):
+            all_term_ranks[lang_code] = {}
+        else:
+            with open(tf_file) as term_freq_file:
+                term_freqs = cu.read_rank_file(term_freq_file, MAX_WORDS_PER_LANG)
+                all_term_ranks[lang_code] = term_freqs
+        cf_file = os.path.join(data_dir, f'{lang_code}_char_freq.csv')
+        if not os.path.isfile(cf_file):
+            all_char_freqs[lang_code] = {}
+        else:
+            with open(os.path.join(data_dir, f'{lang_code}_char_freq.csv')) as char_freq_file:
+                all_char_freqs[lang_code] = cu.normalize_score_dict(cu.read_freq_file(char_freq_file))
     all_char_weights = invert_char_tables(all_char_freqs)
 
     logging.debug(f"Prepared term and character ranking tables for languages: {sorted(all_term_ranks.keys())}")

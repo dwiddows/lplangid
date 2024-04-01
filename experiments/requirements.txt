@@ -1,3 +1,5 @@
+datasets
+evaluate
 fasttext
 langid
 numpy
@@ -6,3 +8,6 @@ pytest
 scikit-learn
 scipy
 setuptools
+torch
+transformers[torch]
+

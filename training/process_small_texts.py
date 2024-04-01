@@ -6,25 +6,27 @@ Uses data and some example instructions from https://github.com/christos-c/bible
 Includes several hard-coded paths from Dominic's machine.
 """
 from collections import defaultdict
+import csv
 import logging
 import numpy as np
 import os
 from pathlib import Path
-from typing import TextIO
+from typing import Dict, TextIO
 
 import xml.etree.ElementTree as ET
 
 from lplangid import count_utils
 from lplangid import language_classifier as lc
 from lplangid.tokenizer import tokenize_fast as tokenize
-from process_wiki import MIN_WORD_LENGTH, SKIP_WORDS_WITH_DIGITS, WIKI_TEXT_ROOT
+from training.process_wiki_archive import MIN_WORD_LENGTH, SKIP_WORDS_WITH_DIGITS, WIKI_TEXT_ROOT
 
 # The directory with the unzipped files from https://github.com/christos-c/bible-corpus
-BIBLE_XML_DIR = '/Users/widdows/Code/bible-corpus/bibles'
+BIBLE_XML_DIR = str(Path.home() / "Data" / "bibles" / "bible-corpus" / "bibles")
 
 # The directory where these will be extracted to raw text files, in full, train, and test directories.
-BIBLE_TXT_ROOT = '/Users/widdows/Data/BibleTexts'
-SUBDIRS = ['full', 'train', 'test']
+BIBLE_TXT_ROOT = str(Path.home() / "Data" / "bibles" / "BibleTexts")
+SMALLWIKI_TXT_ROOT = Path.home() / "Data" / "WikipediaLindemann"
+SUBDIRS = ["full", "train", "test"]
 
 
 def process_bibles_xml_to_text(corpus_dir=BIBLE_XML_DIR,
@@ -33,7 +35,7 @@ def process_bibles_xml_to_text(corpus_dir=BIBLE_XML_DIR,
     plain_files = [fn for fn in all_files if '-tok' not in fn and '-WEB' not in fn]
     langs = defaultdict(list)
 
-    Path(BIBLE_TXT_ROOT).mkdir(parents=True, exist_ok=True)
+    Path(out_dir_root).mkdir(parents=True, exist_ok=True)
     for subdir in SUBDIRS:
         Path(os.path.join(BIBLE_TXT_ROOT, subdir)).mkdir(parents=True, exist_ok=True)
 
@@ -47,7 +49,7 @@ def process_bibles_xml_to_text(corpus_dir=BIBLE_XML_DIR,
             logging.warning(f"Already seen language '{lang_id}' ({lang_name}) in files {langs[lang_id]}")
 
         out_full, out_train, out_test = [
-            open(os.path.join(BIBLE_TXT_ROOT, subdir, lang_id + '.txt'), 'w', encoding='utf-8')
+            open(os.path.join(out_dir_root, subdir, lang_id + '.txt'), 'w', encoding='utf-8')
             for subdir in SUBDIRS
         ]
         for i, n in enumerate(root.iter('seg')):
@@ -60,6 +62,34 @@ def process_bibles_xml_to_text(corpus_dir=BIBLE_XML_DIR,
                     out_train.write(n.text.strip() + '\n')
             except AttributeError:
                 logging.warning(f"Problem in file {fn} with element {str(n)}")
+
+
+def process_wiki_lindemann_to_text():
+    orig_dir = SMALLWIKI_TXT_ROOT / "Original"
+    meta_lines = csv.reader(open(orig_dir / "wiki_language_codes.csv"))
+    fn2lang = {row[0]: row[1] for row in meta_lines if len(row) > 1}
+    fn2lang = {k: v for k, v in fn2lang.items() if len(v) <= 3}  # Filter out "simple" for "simple english, and other non-ISO codes"
+
+    Path(SMALLWIKI_TXT_ROOT).mkdir(parents=True, exist_ok=True)
+    for subdir in SUBDIRS:
+        Path(os.path.join(SMALLWIKI_TXT_ROOT, subdir)).mkdir(parents=True, exist_ok=True)
+
+    plain_files = [fn for fn in os.listdir(orig_dir) if '.csv' not in fn and '.zip' not in fn]
+
+    for fn in plain_files:
+        if fn not in fn2lang:
+            logging.warning(f"No langmatch for filename {fn}")
+            continue
+
+        text = open(orig_dir / fn).read()
+        out_full, out_train, out_test = [
+            open(os.path.join(SMALLWIKI_TXT_ROOT, subdir, fn2lang[fn]), 'w', encoding='utf-8')
+            for subdir in SUBDIRS
+        ]
+        out_full.write(text)
+        split_point = text.index(" ", (len(text) * 4) // 5)
+        out_train.write(text[:split_point])
+        out_test.write(text[split_point:])
 
 
 def count_text_in_input(filehandle: TextIO):
@@ -79,12 +109,12 @@ def count_text_in_input(filehandle: TextIO):
     return term_freq_dict, char_freq_dict
 
 
-def text_files_to_freq_files(input_dir, output_dir=lc.FREQ_DATA_DIR + '_bible'):
+def text_files_to_freq_files(input_dir: str, file_to_lang_map: Dict[str, str], output_dir):
     if not os.path.isdir(output_dir):
         os.mkdir(output_dir)
 
     for infile in os.listdir(input_dir):
-        lang = infile.split('.')[0]
+        lang = file_to_lang_map[infile]
         with open(os.path.join(input_dir, infile)) as filehandle:
             term_freq_dict, char_freq_dict = count_text_in_input(filehandle)
 
@@ -138,13 +168,15 @@ def run_wikipedia_tests(num_trials=10000, restrict_to_wiki_langs=False):
           f'Precision: {correct/attempted:0.3f}. Recall: {correct/num_trials}')
 
 
-def main():
+def main_bibles():
     # Some of these steps are optional, depending on what you're trying to do.
-    retrain = False
+    retrain = True
     if retrain:
         logging.basicConfig(level=logging.INFO)
         process_bibles_xml_to_text()
-        text_files_to_freq_files(os.path.join(BIBLE_TXT_ROOT, SUBDIRS[1]))
+        texts_dir = os.path.join(BIBLE_TXT_ROOT, SUBDIRS[1])
+        file_to_lang_map = {fn: fn.split('.')[0] for fn in os.listdir(texts_dir)}
+        text_files_to_freq_files(texts_dir, file_to_lang_map, output_dir=lc.FREQ_DATA_DIR + '_bible')
 
     # print("Restricting to Wiki languages:")
     # run_wikipedia_tests(restrict_to_wiki_langs=True)
@@ -152,5 +184,12 @@ def main():
     # run_wikipedia_tests()
 
 
+def main_wiki():
+    process_wiki_lindemann_to_text()
+    texts_dir = os.path.join(SMALLWIKI_TXT_ROOT, SUBDIRS[1])
+    file_to_lang_map = {fn: fn.split('.')[0] for fn in os.listdir(texts_dir)}
+    text_files_to_freq_files(texts_dir, file_to_lang_map, output_dir=lc.FREQ_DATA_DIR + '_smallwiki')
+
+
 if __name__ == '__main__':
-    main()
+    main_wiki()
