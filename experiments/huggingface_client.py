@@ -8,27 +8,37 @@ import numpy as np
 from scipy.special import softmax
 import torch
 
-from accelerate import Accelerator, DataLoaderConfiguration
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer
 
 
 warnings.filterwarnings("ignore", category=FutureWarning, module="accelerate.*")
 
-HUGGINGFACE_MODEL_ROOT = Path(os.path.dirname(__file__)) / "distilbert_lc_model_80"
+HUGGINGFACE_DEFAULT_MODEL_ROOT = Path(os.path.dirname(__file__)) / "distilmbert_lc_model_800"
+
+HUGGINGFACE_XLM_MODEL_PATH = "papluca/xlm-roberta-base-language-detection"
 
 
-def get_latest_model_from_dir(directory):
+def get_latest_model_from_dir(model_path):
+    # If it's not a directory, hopefully it's a huggingface tag ...
+    if not os.path.exists(model_path):
+        return model_path
+
+    # If it's a directory with a config.json, it's probably what we're looking for.
+    if os.path.isfile(Path(model_path) / "config.json"):
+        return model_path
+
+    # Otherwise look for the last checkpoint in the directory.
     pattern = re.compile(r"checkpoint-\d+")
-    dir_items = os.listdir(directory)
+    dir_items = os.listdir(model_path)
     checkpoints = sorted(filter(pattern.match, dir_items), key=lambda x: int(x.split('-')[-1]))
     if not checkpoints:
         raise ValueError("No checkpoint found in the directory.")
     latest_checkpoint = checkpoints[-1]
-    return os.path.join(directory, latest_checkpoint)
+    return os.path.join(model_path, latest_checkpoint)
 
 
 class HuggingfaceLangID:
-    def __init__(self, model_root=HUGGINGFACE_MODEL_ROOT):
+    def __init__(self, model_root=HUGGINGFACE_DEFAULT_MODEL_ROOT):
         model_path = get_latest_model_from_dir(model_root)
         self.lc_model = AutoModelForSequenceClassification.from_pretrained(model_path)
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -65,8 +75,10 @@ class HuggingfaceLangID:
 
 
 if __name__ == "__main__":
-    LANGUAGE = HuggingfaceLangID()
-    lang = LANGUAGE.predict_lang_batch(["Hello in English", "Bonjour en Francais"])
-    print(f"Prediction: {lang}")
-
+    hg_classifier = HuggingfaceLangID()
+    lang = hg_classifier.predict_lang_batch(["Hello in English", "Bonjour en Francais"])
+    print(f"Default prediction: {lang}")
+    hg_xlm_classifier = HuggingfaceLangID(HUGGINGFACE_XLM_MODEL_PATH)
+    lang = hg_xlm_classifier.predict_lang_batch(["Hello in English", "Bonjour en Francais"])
+    print(f"XLM prediction: {lang}")
 
